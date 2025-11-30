@@ -1,26 +1,27 @@
 import { supabase } from '../lib/supabase';
 import type { User } from '../models/User';
 
-const VALID_SECRET_KEY = 'NEXIUM-2025'; // Or fetch from your backend if dynamic
-
 export const signUp = async (
-  name: string,
+  firstname: string,
+  lastname: string,
   email: string,
   password: string,
-  secretKey: string
+  dateOfBirth: string,
+  address: string,
 ): Promise<User | null> => {
-  // Step 1: Validate company key
-  if (secretKey !== VALID_SECRET_KEY) {
-    console.error('Invalid company secret key');
-    return null;
-  }
-
-  // Step 2: Create user in Supabase Auth
+ 
+  // Step 1: Create user in Supabase Auth
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name: name }, // Store metadata
+      data: { 
+        firstname,
+        lastname,
+        dateOfBirth,
+        address,
+        full_name: `${firstname} ${lastname}`
+      }, // Store metadata
     },
   });
 
@@ -29,11 +30,14 @@ export const signUp = async (
     return null;
   }
 
-  // Step 3: Return your user object shape
+  // Step 2: Return your user object shape
   return {
     id: data.user.id,
     email: data.user.email!,
-    name,
+    firstname,
+    lastname,
+    dateOfBirth,
+    address,
     role: 'user',
   };
 };
@@ -55,7 +59,10 @@ export const signIn = async (
   return {
     id: data.user.id,
     email: data.user.email!,
-    name: data.user.user_metadata.full_name || 'User',
+    firstname: data.user.user_metadata.firstname || 'First',
+    lastname: data.user.user_metadata.lastname || 'Last',
+    dateOfBirth: data.user.user_metadata.dateOfBirth || '',
+    address: data.user.user_metadata.address || '',
     role: 'user',
   };
 };

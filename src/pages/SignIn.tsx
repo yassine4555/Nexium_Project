@@ -11,50 +11,85 @@ const SignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const user = await signIn(email, password);
-    if (user) navigate('/');
+    if (user) navigate('/dashboard');
     else setError('Invalid credentials');
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white">
-     
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+      </div>
 
       {/* Sign In Form */}
-      <main className="flex-1 flex items-center justify-center py-24 px-4">
-        <div className="bg-purple-700/90 p-10 rounded-2xl shadow-2xl w-full max-w-md">
-          <h2 className="text-3xl font-semibold mb-8 text-center">Sign In to Nexium</h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
+      <main className="relative flex-1 flex items-center justify-center py-24 px-4 z-10">
+        <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl p-12 rounded-3xl shadow-2xl w-full max-w-md border border-slate-700/50 hover:border-cyan-500/50 transition-all duration-300">
+          {/* Header */}
+          <div className="text-center mb-10">
+            <div className="inline-block p-4 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-2xl mb-4">
+              <span className="text-4xl">🔐</span>
+            </div>
+            <h2 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400">Welcome Back</h2>
+            <p className="text-slate-400">Sign in to access your Nexium dashboard</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email Field */}
             <div>
-              <label className="block text-gray-200 mb-2">Email</label>
+              <label className="block text-slate-200 mb-3 font-medium text-sm tracking-wide">Email Address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+                placeholder="you@example.com"
+                className="w-full px-4 py-3 rounded-xl bg-slate-700/50 border-2 border-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 text-white placeholder-slate-500 transition-all duration-200"
                 required
               />
             </div>
+
+            {/* Password Field */}
             <div>
-              <label className="block text-gray-200 mb-2">Password</label>
+              <label className="block text-slate-200 mb-3 font-medium text-sm tracking-wide">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-3 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+                placeholder="••••••••"
+                className="w-full px-4 py-3 rounded-xl bg-slate-700/50 border-2 border-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 text-white placeholder-slate-500 transition-all duration-200"
                 required
               />
             </div>
-            {error && <p className="text-red-400 text-center">{error}</p>}
+
+            {/* Error Message */}
+            {error && (
+              <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+                <p className="text-red-300 text-sm font-medium text-center">{error}</p>
+              </div>
+            )}
+
+            {/* Sign In Button */}
             <button
               type="submit"
-              className="w-full py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition duration-200"
+              className="w-full py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98] mt-8"
             >
-              Sign In
+              Sign In to Dashboard
             </button>
           </form>
-          <p className="mt-6 text-center text-gray-300">
-            Don’t have an account?{' '}
-            <Link to="/signup" className="text-purple-200 hover:text-white transition">Sign Up</Link>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-8">
+            <div className="flex-1 h-px bg-slate-600" />
+            <span className="text-slate-400 text-sm">New to Nexium?</span>
+            <div className="flex-1 h-px bg-slate-600" />
+          </div>
+
+          {/* Sign Up Link */}
+          <p className="text-center text-slate-300">
+            <Link to="/signup" className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors text-lg">
+              Create an account
+            </Link>
           </p>
         </div>
       </main>

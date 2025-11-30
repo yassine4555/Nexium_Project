@@ -1,29 +1,29 @@
 import { Link } from "react-router-dom";
-import { Star } from "lucide-react";
+import { Star, Zap, Users, Lightbulb, Gamepad2 } from "lucide-react";
 
 const Home = () => {
   return (
-    <main className="bg-black text-white">
+    <main className="bg-slate-950 text-white">
       {/* HERO SECTION */}
-      <section className="bg-gradient-to-r from-purple-700 to-purple-900 py-24">
+      <section id="hero" className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 py-24">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6">
-            Empower Your Company’s Collaboration
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400">
+            Empower Your Company's Collaboration
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-slate-200 mb-10 max-w-3xl mx-auto">
             A comprehensive platform for meetings, events, learning, and team entertainment —
             all unified in one powerful solution for modern organizations.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/signup"
-              className="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition transform hover:scale-105"
+              className="bg-cyan-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition transform hover:scale-105 shadow-lg"
             >
               Get Started
             </Link>
             <Link
               to="/signin"
-              className="bg-white text-purple-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition transform hover:scale-105"
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105 shadow-lg"
             >
               Sign In
             </Link>
@@ -32,9 +32,9 @@ const Home = () => {
       </section>
 
       {/* FEATURES SECTION */}
-      <section className="py-24 bg-gray-950">
+      <section id="features" className="py-24 bg-slate-900">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-purple-400 font-semibold mb-4 tracking-wide">
+          <h2 className="text-cyan-400 font-semibold mb-4 tracking-widest uppercase text-sm">
             OUR FEATURES
           </h2>
           <h3 className="text-4xl md:text-5xl font-bold mb-10">
@@ -68,10 +68,7 @@ const Home = () => {
                 text: "Foster strong team bonds with entertainment and interactive activities.",
               },
             ].map((feature, i) => (
-              <div
-                key={i}
-                className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-xl p-8 text-left hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-              >
+              <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl p-8 text-left hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-300 border border-slate-700 hover:border-cyan-500/50">
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h4 className="text-xl font-semibold mb-2">{feature.title}</h4>
                 <p className="text-gray-400">{feature.text}</p>
@@ -82,9 +79,9 @@ const Home = () => {
       </section>
 
       {/* TESTIMONIALS SECTION */}
-      <section className="py-24 bg-gray-900">
+      <section id="testimonials" className="py-24 bg-slate-800">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-purple-400 font-semibold mb-4 tracking-wide">
+          <h2 className="text-cyan-400 font-semibold mb-4 tracking-widest uppercase text-sm">
             TESTIMONIALS
           </h2>
           <h3 className="text-4xl md:text-5xl font-bold mb-10">
@@ -134,18 +131,18 @@ const Home = () => {
       </section>
 
       {/* CALL TO ACTION SECTION */}
-      <section className="bg-purple-700 py-20 text-center">
+      <section id="cta" className="bg-gradient-to-r from-blue-900 to-slate-900 py-20 text-center border-t-2 border-cyan-500/30">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Ready to Transform Your Team’s Collaboration?
+            Ready to Transform Your Team's Collaboration?
           </h2>
-          <p className="text-lg mb-8 text-gray-200">
+          <p className="text-lg mb-8 text-slate-200">
             Join thousands of companies already using Nexium to boost engagement
             and streamline operations.
           </p>
           <Link
             to="/signup"
-            className="bg-white text-purple-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition transform hover:scale-105"
+            className="bg-cyan-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-cyan-600 transition transform hover:scale-105 shadow-lg"
           >
             Get Started Now
           </Link>

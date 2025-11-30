@@ -4,22 +4,23 @@ import Footer from './views/Footer';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import Dashboard from './pages/Dashboard';
 import './App.css'
 
 function AppContent() {
   const location = useLocation();
-  const hideHeader = ['/signin', '/signup'].includes(location.pathname);
-  const showFooter = location.pathname !== '/signin' && location.pathname !== '/signup';
+  const hideHeaderFooter = ['/signin', '/signup', '/dashboard'].some(path => location.pathname.startsWith(path));
 
   return (
     <div className="h-screen bg-black text-white">
-      {!hideHeader && <Header />}
+      {!hideHeaderFooter && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
-      {showFooter && <Footer />}
+      {!hideHeaderFooter && <Footer />}
     </div>
   );
 }
