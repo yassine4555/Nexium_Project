@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from '../controllers/authController';
+import { isAuthenticated } from '../lib/api';
 
 const SignUp = () => {
   const [firstname, setFirstname] = useState('');
@@ -9,17 +10,40 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [address, setAddress] = useState('');
+  const [companyToken, setCompanyToken] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to dashboard if already authenticated
+    if (isAuthenticated()) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    // ✅ Pass the secretKey to signUp for validation
-    const user = await signUp(firstname, lastname, email, password, dateOfBirth, address);
+    try {
+      const user = await signUp(firstname, lastname, email, password, dateOfBirth, address, companyToken);
 
-    if (user) navigate('/signin');
-    else setError('Sign up failed. Please check your informations.');
+      if (user) {
+        setSuccess(true);
+        // Show success message before redirect
+        setTimeout(() => {
+          navigate('/signin', { replace: true });
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      setError(error instanceof Error ? error.message : 'Sign up failed. Please check your information.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -97,6 +121,19 @@ const SignUp = () => {
               />
             </div>
 
+            {/* Address */}
+            <div>
+              <label className="block text-slate-200 mb-2 font-medium text-sm">Address</label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Your address"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-700/50 border-2 border-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 text-white placeholder-slate-500 transition-all duration-200"
+                required
+              />
+            </div>
+
             {/* Date & Company Token Row */}
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -113,8 +150,8 @@ const SignUp = () => {
                 <label className="block text-slate-200 mb-2 font-medium text-sm">Company Token</label>
                 <input
                   type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  value={companyToken}
+                  onChange={(e) => setCompanyToken(e.target.value)}
                   placeholder="Token"
                   className="w-full px-4 py-2.5 rounded-xl bg-slate-700/50 border-2 border-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 text-white placeholder-slate-500 transition-all duration-200"
                   required
@@ -129,12 +166,32 @@ const SignUp = () => {
               </div>
             )}
 
+            {/* Success Message */}
+            {success && (
+              <div className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg">
+                <p className="text-green-300 text-sm font-medium text-center">Account created successfully! Redirecting to sign in...</p>
+              </div>
+            )}
+
             {/* Sign Up Button */}
             <button
               type="submit"
-              className="w-full py-3.5 mt-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98]"
+              disabled={loading || success}
+              className="w-full py-3.5 mt-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
             >
-              Create Account
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  Creating Account...
+                </>
+              ) : success ? (
+                <>
+                  <span>✓</span>
+                  Account Created!
+                </>
+              ) : (
+                'Create Account'
+              )}
             </button>
           </form>
 
