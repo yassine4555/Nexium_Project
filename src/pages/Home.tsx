@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star, Zap, Users, Lightbulb, Gamepad2 } from "lucide-react";
+import { Star } from "lucide-react";
 
 const Home = () => {
   return (
@@ -64,11 +64,11 @@ const Home = () => {
               },
               {
                 icon: "🎮",
-                title: "Team Building",
+                title: "Team Activities",
                 text: "Foster strong team bonds with entertainment and interactive activities.",
               },
-            ].map((feature, i) => (
-              <div className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl p-8 text-left hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-300 border border-slate-700 hover:border-cyan-500/50">
+            ].map((feature) => (
+              <div key={feature.title} className="bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl p-8 text-left hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2 transition-all duration-300 border border-slate-700 hover:border-cyan-500/50">
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h4 className="text-xl font-semibold mb-2">{feature.title}</h4>
                 <p className="text-gray-400">{feature.text}</p>

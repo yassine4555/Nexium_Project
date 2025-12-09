@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabase';
 import type { User } from '../models/User';
+import { GATEWAY_BASE_URL } from '../lib/api';
 
 export const signUp = async (
   firstname: string,
@@ -8,61 +8,97 @@ export const signUp = async (
   password: string,
   dateOfBirth: string,
   address: string,
+  managercode?: string,
 ): Promise<User | null> => {
- 
-  // Step 1: Create user in Supabase Auth
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { 
-        firstname,
-        lastname,
-        dateOfBirth,
-        address,
-        full_name: `${firstname} ${lastname}`
-      }, // Store metadata
-    },
-  });
+  try {
+    const response = await fetch(`${GATEWAY_BASE_URL}/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        Password: password,
+        FirstName: firstname,
+        LastName: lastname,
+        DateOfBirth: dateOfBirth,
+        Address: address,
+        managercode,
+      }),
+    });
 
-  if (error || !data.user) {
-    console.error(error?.message || 'Signup failed');
-    return null;
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Signup failed:', data);
+      throw new Error(data.message || `Signup failed with status ${response.status}`);
+    }
+
+    // Store the JWT token and user info
+    localStorage.setItem('jwt_token', data.AuthToken);
+    localStorage.setItem('user_id', data.id);
+    localStorage.setItem('user_email', email);
+    localStorage.setItem('user_firstname', data.firstname || firstname);
+    localStorage.setItem('user_lastname', data.lastname || lastname);
+    localStorage.setItem('user_role', data.role || 'user');
+
+    return {
+      id: data.id,
+      email,
+      firstname: data.firstname || firstname,
+      lastname: data.lastname || lastname,
+      dateOfBirth,
+      address,
+      role: data.role || 'user',
+    };
+  } catch (error) {
+    console.error('Signup error:', error);
+    throw error; // Re-throw to let the UI handle it
   }
-
-  // Step 2: Return your user object shape
-  return {
-    id: data.user.id,
-    email: data.user.email!,
-    firstname,
-    lastname,
-    dateOfBirth,
-    address,
-    role: 'user',
-  };
 };
 
 export const signIn = async (
   email: string,
   password: string
 ): Promise<User | null> => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+  try {
+    const response = await fetch(`${GATEWAY_BASE_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
-  if (error || !data.user) {
-    console.error(error?.message || 'Login failed');
-    return null;
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Login failed:', data);
+      throw new Error(data.message || `Login failed with status ${response.status}`);
+    }
+
+    // Store the JWT token and user info
+    localStorage.setItem('jwt_token', data.Token);
+    localStorage.setItem('user_id', data.id);
+    localStorage.setItem('user_email', email);
+    localStorage.setItem('user_firstname', data.firstname || '');
+    localStorage.setItem('user_lastname', data.lastname || '');
+    localStorage.setItem('user_role', data.role || 'user');
+
+    return {
+      id: data.id,
+      email: data.email,
+      firstname: data.firstname || '',
+      lastname: data.lastname || '',
+      dateOfBirth: '',
+      address: '',
+      role: data.role === 'EMPLOYER' ? 'admin' : 'user',
+    };
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error; // Re-throw to let the UI handle it
   }
-
-  return {
-    id: data.user.id,
-    email: data.user.email!,
-    firstname: data.user.user_metadata.firstname || 'First',
-    lastname: data.user.user_metadata.lastname || 'Last',
-    dateOfBirth: data.user.user_metadata.dateOfBirth || '',
-    address: data.user.user_metadata.address || '',
-    role: 'user',
-  };
 };
